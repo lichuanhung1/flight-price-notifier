@@ -43,11 +43,32 @@ Continue developing this project in the [Lovable editor](https://lovable.dev/pro
 
 ## Development
 
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+This is a plain Vite + React single-page app with client-side routing (React Router). There is no server rendering; `npm run build` emits a static site to `dist/`.
+
+You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
 
 ```sh
 git clone <this-repository-url>
 cd <repository-name>
 npm i
-npm run dev
+npm run dev      # http://localhost:8080
+npm run build    # static output in dist/
+npm run preview  # serve dist/ locally
 ```
+
+| Path | Page |
+| --- | --- |
+| `/` | Landing page |
+| `/sign-in` | Sign in |
+| `/sign-up` | Sign up |
+| `/app` | Dashboard (signed-in only; others are sent to `/sign-in`) |
+
+Routes are defined in `src/router.tsx`. The old `/auth` URL redirects to `/sign-in` (or `/sign-up` with `?mode=signup`).
+
+## Deploying to Vercel
+
+Import the repository in Vercel; `vercel.json` sets the Vite build, the `dist/` output, and a rewrite of every path to `index.html` so deep links such as `/app` resolve in the browser.
+
+The Supabase URL and publishable key are read at build time from the `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` variables in `.env`. To point at a different Supabase project, set those two variables in the Vercel project settings instead.
+
+In Supabase → Authentication → URL Configuration, add your Vercel domain to the allowed redirect URLs so sign-up confirmation links land on `/app`.

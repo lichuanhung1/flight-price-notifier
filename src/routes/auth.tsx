@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { Link, Navigate, useNavigate, useSearchParams } from "react-router";
 import { useEffect, useState, type FormEvent } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -6,28 +6,26 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Logo } from "@/components/Logo";
+import { usePageMeta, type MetaTag } from "@/lib/page-meta";
 
 type Mode = "signin" | "signup";
 
-export const Route = createFileRoute("/auth")({
-  validateSearch: (s: Record<string, unknown>): { mode?: Mode } =>
-    s["mode"] === "signup" ? { mode: "signup" } : {},
-  head: () => ({
-    meta: [
-      { title: "Sign in — Flight Price Notifier" },
-      { name: "description", content: "登入或註冊 Flight Price Notifier 帳號。" },
-      { property: "og:title", content: "Sign in — Flight Price Notifier" },
-      { property: "og:description", content: "Sign in or create your Flight Price Notifier account." },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
-    ],
-  }),
-  component: AuthPage,
-});
+const pageMeta: MetaTag[] = [
+  { name: "description", content: "登入或註冊 Flight Price Notifier 帳號。" },
+  { property: "og:title", content: "Sign in — Flight Price Notifier" },
+  { property: "og:description", content: "Sign in or create your Flight Price Notifier account." },
+  { property: "og:type", content: "website" },
+  { name: "twitter:card", content: "summary" },
+];
 
-function AuthPage() {
-  const { mode: initial } = Route.useSearch();
-  const [mode, setMode] = useState<Mode>(initial ?? "signin");
+/** /auth and /auth?mode=signup from before the move to /sign-in and /sign-up. */
+export function LegacyAuthRedirect() {
+  const [params] = useSearchParams();
+  return <Navigate to={params.get("mode") === "signup" ? "/sign-up" : "/sign-in"} replace />;
+}
+
+export function AuthPage({ mode }: { mode: Mode }) {
+  usePageMeta("Sign in — Flight Price Notifier", pageMeta);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -35,7 +33,7 @@ function AuthPage() {
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
-      if (data.user) navigate({ to: "/app", replace: true });
+      if (data.user) navigate("/app", { replace: true });
     });
   }, [navigate]);
 
@@ -55,7 +53,7 @@ function AuthPage() {
       toast.success("請到信箱確認帳號 / Check your email to confirm.");
       return;
     }
-    navigate({ to: "/app", replace: true });
+    navigate("/app", { replace: true });
   }
 
   const isUp = mode === "signup";
@@ -81,7 +79,7 @@ function AuthPage() {
           </form>
           <p className="mt-4 text-center text-sm text-muted-foreground">
             {isUp ? "已經有帳號？" : "還沒有帳號？"}{" "}
-            <button type="button" className="text-primary-glow hover:underline" onClick={() => setMode(isUp ? "signin" : "signup")}>
+            <button type="button" className="text-primary-glow hover:underline" onClick={() => navigate(isUp ? "/sign-in" : "/sign-up", { replace: true })}>
               {isUp ? "Sign in" : "Sign up"}
             </button>
           </p>

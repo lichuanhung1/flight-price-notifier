@@ -1,16 +1,29 @@
-import { QueryClient } from "@tanstack/react-query";
-import { createRouter } from "@tanstack/react-router";
-import { routeTree } from "./routeTree.gen";
+import type { RouteObject } from "react-router";
 
-export const getRouter = () => {
-  const queryClient = new QueryClient();
+import { RequireAuth } from "@/components/RequireAuth";
+import { RootLayout, RouteErrorPage, NotFoundPage } from "@/routes/root";
+import { LandingPage } from "@/routes/index";
+import { AuthPage, LegacyAuthRedirect } from "@/routes/auth";
+import { AppPage } from "@/routes/app";
 
-  const router = createRouter({
-    routeTree,
-    context: { queryClient },
-    scrollRestoration: true,
-    defaultPreloadStaleTime: 0,
-  });
-
-  return router;
-};
+// Client-side route table. Every path is served index.html by the host
+// (see vercel.json), and React Router resolves it in the browser.
+export const routes: RouteObject[] = [
+  {
+    path: "/",
+    element: <RootLayout />,
+    errorElement: <RouteErrorPage />,
+    children: [
+      { index: true, element: <LandingPage /> },
+      { path: "sign-in", element: <AuthPage mode="signin" /> },
+      { path: "sign-up", element: <AuthPage mode="signup" /> },
+      // Old links (/auth, /auth?mode=signup) keep working.
+      { path: "auth", element: <LegacyAuthRedirect /> },
+      {
+        element: <RequireAuth />,
+        children: [{ path: "app", element: <AppPage /> }],
+      },
+      { path: "*", element: <NotFoundPage /> },
+    ],
+  },
+];
