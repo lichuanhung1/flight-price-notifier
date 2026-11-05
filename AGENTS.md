@@ -28,3 +28,5 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+- Backend auth is used for sign-in only (built-in users table); app data will live outside it, so do not add custom tables, profiles, or RPCs. Why: product architecture keeps app data in a separate backend.
