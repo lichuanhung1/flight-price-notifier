@@ -12,7 +12,7 @@ Card 1: 「盯緊熱門航線 (Always-on route watching)」 — 持續監控台�
 Card 2: 「達標自動通知 (Target-price email alerts)」 — 低於你設定的目標價，就寄 email 提醒你，附上立即訂購連結。
 Card 3: 「隨時取消 (Cancel anytime)」 — 月訂閱制，不想用隨時停，沒有綁約。
 Footer with copyright 「© 2026 Flight Price Notifier」.
-Authentication using Lovable's built-in Supabase-style auth (use whatever auth backend Lovable provides by default — Lovable Cloud is fine for this v1; we'll swap to a user-owned Supabase project in a later step):
+Authentication using Supabase Auth on the user's own Supabase project (`flight-price-notifier-001`):
 
 Sign Up page with email + password
 Sign In page with email + password
@@ -69,6 +69,13 @@ Routes are defined in `src/router.tsx`. The old `/auth` URL redirects to `/sign-
 
 Import the repository in Vercel; `vercel.json` sets the Vite build, the `dist/` output, and a rewrite of every path to `index.html` so deep links such as `/app` resolve in the browser.
 
-The Supabase URL and publishable key are read at build time from the `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` variables in `.env`. To point at a different Supabase project, set those two variables in the Vercel project settings instead.
+The Supabase URL and publishable key are read at build time from `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY`. Locally they come from `.env`; on Vercel, add both under **Settings → Environment Variables** (Production and Preview) with the same values:
+
+```
+VITE_SUPABASE_URL=https://mmcgxlcptlwxpskwoomb.supabase.co
+VITE_SUPABASE_PUBLISHABLE_KEY=sb_publishable_JYaQvsAQb9vKQVBRSigUNw_iGt5aOdE
+```
+
+The publishable key (`sb_publishable_*`, formerly the "anon key") is safe in the browser; access is enforced by Row Level Security.
 
 In Supabase → Authentication → URL Configuration, add your Vercel domain to the allowed redirect URLs so sign-up confirmation links land on `/app`.
