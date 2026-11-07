@@ -62,29 +62,29 @@ export function AuthPage({ mode }: { mode: Mode }) {
       <div className="pointer-events-none absolute inset-0 bg-gradient-hero" />
       <div className="relative w-full max-w-sm">
         <div className="mb-8 flex justify-center"><Logo /></div>
-        <div className="rounded-xl border border-border bg-card p-6 shadow-glow">
-          <h1 className="text-2xl font-bold">{isUp ? "註冊 Sign up" : "登入 Sign in"}</h1>
+        <div className="rounded-3xl border-t-[10px] border-tangerine bg-card p-7 shadow-glow">
+          <h1 className="text-3xl">{isUp ? "註冊 Sign up" : "登入 Sign in"}</h1>
           <form onSubmit={onSubmit} className="mt-6 space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email" className="font-bold">Email</Label>
               <Input id="email" type="email" required autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password" className="font-bold">Password</Label>
               <Input id="password" type="password" required minLength={6} autoComplete={isUp ? "new-password" : "current-password"} value={password} onChange={(e) => setPassword(e.target.value)} />
             </div>
-            <Button type="submit" variant="hero" className="w-full" disabled={loading}>
+            <Button type="submit" variant="hero" size="lg" className="w-full" disabled={loading}>
               {loading ? "…" : isUp ? "建立帳號 Create account" : "登入 Sign in"}
             </Button>
           </form>
           <p className="mt-4 text-center text-sm text-muted-foreground">
             {isUp ? "已經有帳號？" : "還沒有帳號？"}{" "}
-            <button type="button" className="text-primary-glow hover:underline" onClick={() => navigate(isUp ? "/sign-in" : "/sign-up", { replace: true })}>
+            <button type="button" className="font-bold text-foreground underline decoration-tangerine decoration-2 underline-offset-4 hover:decoration-4" onClick={() => navigate(isUp ? "/sign-in" : "/sign-up", { replace: true })}>
               {isUp ? "Sign in" : "Sign up"}
             </button>
           </p>
         </div>
-        <p className="mt-6 text-center text-sm"><Link to="/" className="text-muted-foreground hover:text-foreground">← 回首頁 Back home</Link></p>
+        <p className="mt-6 text-center text-sm"><Link to="/" className="font-semibold text-foreground/70 hover:text-foreground">← 回首頁 Back home</Link></p>
       </div>
     </div>
   );

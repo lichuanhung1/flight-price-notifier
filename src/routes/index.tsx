@@ -13,6 +13,9 @@ const pageMeta: MetaTag[] = [
   { name: "twitter:card", content: "summary_large_image" },
 ];
 
+/** Yoga-mat tops, in the leg-warmer colors. */
+const matColors = ["var(--primary)", "var(--sky)", "var(--tangerine)"];
+
 const features = [
   { icon: Radar, title: "盯緊熱門航線", en: "Always-on route watching", body: "持續監控台北出發的熱門航線（東京、首爾），自動抓最低票價。" },
   { icon: BellRing, title: "達標自動通知", en: "Target-price email alerts", body: "低於你設定的目標價，就寄 email 提醒你，附上立即訂購連結。" },
@@ -23,7 +26,7 @@ export function LandingPage() {
   usePageMeta("Flight Price Notifier — 機票降價通知", pageMeta);
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <header className="sticky top-0 z-20 border-b border-border bg-background/70 backdrop-blur">
+      <header className="sticky top-0 z-20 border-b-2 border-border/60 bg-background/80 backdrop-blur">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
           <Logo />
           <Button asChild variant="hero">
@@ -34,43 +37,54 @@ export function LandingPage() {
 
       <section className="relative overflow-hidden">
         <div className="pointer-events-none absolute inset-0 bg-gradient-hero" />
-        <div className="relative mx-auto max-w-4xl px-4 py-24 text-center sm:py-32">
+        {/* Window mullions, like the gym window in the reference art. */}
+        <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-[58%] bg-window opacity-50" />
+        <div aria-hidden className="pointer-events-none absolute inset-x-0 top-[58%] h-1.5 bg-floor opacity-70" />
+        <div className="relative mx-auto grid max-w-6xl items-end gap-10 px-4 pt-20 pb-16 sm:px-6 sm:pt-28 md:grid-cols-[1fr_auto]">
           <Reveal>
-            <p className="mx-auto mb-6 inline-block rounded-full border border-border bg-card px-3 py-1 text-xs text-muted-foreground">
+            <p className="mb-6 inline-block rounded-full bg-sky px-4 py-1.5 text-sm font-bold text-foreground shadow-clay">
               TPE → NRT · HND · ICN
             </p>
-            <h1 className="text-5xl font-extrabold tracking-tight sm:text-7xl">
+            <h1 className="text-5xl leading-[1.05] font-bold sm:text-7xl">
               <span className="text-gradient">Flight Price Notifier</span>
             </h1>
-            <p className="mt-6 text-xl font-semibold sm:text-2xl">設定航線與目標價，機票降價就通知你</p>
-            <p className="mt-3 text-muted-foreground">Set a route and a target price — we email you when the fare drops.</p>
+            <p className="mt-8 max-w-xl text-xl font-bold sm:text-2xl">設定航線與目標價，機票降價就通知你</p>
+            <p className="mt-3 max-w-xl text-foreground/75">Set a route and a target price — we email you when the fare drops.</p>
             <div className="mt-10">
               <Button asChild variant="hero" size="lg">
                 <Link to="/sign-up">開始使用 Get started</Link>
               </Button>
             </div>
           </Reveal>
+          {/* Stacked clay ring toy — purely decorative. */}
+          <div aria-hidden className="mx-auto hidden w-44 flex-col items-center md:flex">
+            <span className="h-10 w-24 rounded-full bg-primary bg-knit shadow-glow" />
+            <span className="-mt-1 h-11 w-32 rounded-full bg-sky bg-knit shadow-glow" />
+            <span className="-mt-1 h-12 w-40 rounded-full bg-tangerine bg-knit shadow-glow" />
+            <span className="mt-1 h-3 w-44 rounded-full bg-foreground/15 blur-sm" />
+          </div>
         </div>
+        <div aria-hidden className="relative h-10 bg-floor" />
       </section>
 
-      <section className="mx-auto max-w-6xl px-4 pb-24 sm:px-6">
-        <div className="grid gap-6 md:grid-cols-3">
+      <section className="bg-floor px-4 pb-24 sm:px-6">
+        <div className="mx-auto grid max-w-6xl gap-6 md:grid-cols-3">
           {features.map((f, i) => (
             <Reveal key={f.title} delay={i * 120}>
-              <div className="h-full rounded-xl border border-border bg-card p-6 transition-colors hover:border-primary/50">
-                <div className="mb-4 grid h-10 w-10 place-items-center rounded-lg bg-accent">
-                  <f.icon className="h-5 w-5 text-primary-glow" />
+              <div className="h-full rounded-3xl border-t-[10px] bg-card p-7 shadow-glow transition-transform hover:-translate-y-1" style={{ borderTopColor: matColors[i % matColors.length] }}>
+                <div className="mb-5 grid h-12 w-12 place-items-center rounded-2xl shadow-clay" style={{ backgroundColor: matColors[i % matColors.length] }}>
+                  <f.icon className="h-6 w-6 text-foreground" />
                 </div>
-                <h3 className="text-lg font-semibold">{f.title}</h3>
-                <p className="text-sm text-muted-foreground">({f.en})</p>
-                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{f.body}</p>
+                <h3 className="text-xl">{f.title}</h3>
+                <p className="text-sm font-semibold text-muted-foreground">({f.en})</p>
+                <p className="mt-3 text-[0.95rem] leading-relaxed text-foreground/80">{f.body}</p>
               </div>
             </Reveal>
           ))}
         </div>
       </section>
 
-      <footer className="border-t border-border py-8 text-center text-sm text-muted-foreground">
+      <footer className="bg-floor py-8 text-center text-sm font-semibold text-primary-foreground">
         © 2026 Flight Price Notifier
       </footer>
     </div>

@@ -25,7 +25,7 @@ export function RootLayout() {
       <AppErrorBoundary key={location.pathname}>
         <Outlet />
       </AppErrorBoundary>
-      <Toaster theme="dark" />
+      <Toaster theme="light" />
       <ScrollRestoration />
     </>
   );
@@ -38,7 +38,7 @@ export function NotFoundPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
-        <h1 className="text-7xl font-bold text-foreground">404</h1>
+        <h1 className="text-gradient text-7xl font-bold">404</h1>
         <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
         <p className="mt-2 text-sm text-muted-foreground">
           The page you're looking for doesn't exist or has been moved.
@@ -46,7 +46,7 @@ export function NotFoundPage() {
         <div className="mt-6">
           <Link
             to="/"
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+            className="inline-flex items-center justify-center rounded-full bg-gradient-primary px-5 py-2 text-sm font-bold text-primary-foreground shadow-glow"
           >
             Go home
           </Link>
@@ -69,13 +69,13 @@ function ErrorFallback({ onRetry }: { onRetry: () => void }) {
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
             onClick={onRetry}
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+            className="inline-flex items-center justify-center rounded-full bg-gradient-primary px-5 py-2 text-sm font-bold text-primary-foreground shadow-glow"
           >
             Try again
           </button>
           <a
             href="/"
-            className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
+            className="inline-flex items-center justify-center rounded-full border-2 border-input bg-card px-5 py-2 text-sm font-bold text-foreground shadow-clay hover:bg-accent"
           >
             Go home
           </a>
