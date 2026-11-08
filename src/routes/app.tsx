@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/Logo";
 import { useAuthedUser } from "@/components/RequireAuth";
 import { usePageMeta, type MetaTag } from "@/lib/page-meta";
+import { PlanCards } from "@/components/PlanCards";
 
 const pageMeta: MetaTag[] = [
   { name: "description", content: "你的航線追蹤儀表板。" },
@@ -40,13 +41,15 @@ export function AppPage() {
       </header>
       <main className="mx-auto max-w-3xl px-4 py-16">
         <h1 className="break-all text-3xl sm:text-4xl">Hi {user.email}</h1>
-        <div className="mt-8 rounded-3xl border-2 border-dashed border-primary bg-card p-10 text-center shadow-glow">
-          <span className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-sky bg-knit shadow-glow"><Radar className="h-8 w-8 text-foreground" /></span>
-          <p className="mt-5 text-lg font-semibold">你的航線追蹤儀表板即將上線 — 下一個里程碑會加上訂閱航線的功能。</p>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Your dashboard is coming soon. Route-subscription will be added in the next milestone.
-          </p>
-        </div>
+        {user.email ? (
+          <PlanCards email={user.email.toLowerCase()} />
+        ) : (
+          <div className="mt-8 rounded-3xl border-2 border-dashed border-primary bg-card p-10 text-center shadow-glow">
+            <span className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-sky bg-knit shadow-glow"><Radar className="h-8 w-8 text-foreground" /></span>
+            <p className="mt-5 text-lg font-semibold">這個帳號沒有 email，無法寄送降價通知。</p>
+            <p className="mt-2 text-sm text-muted-foreground">Price alerts need an email address on your account.</p>
+          </div>
+        )}
       </main>
     </div>
   );
