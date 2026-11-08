@@ -1,6 +1,8 @@
-import { useNavigate } from "react-router";
+import { useEffect } from "react";
+import { useNavigate, useSearchParams } from "react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { LogOut, Radar } from "lucide-react";
+import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/Logo";
@@ -21,6 +23,23 @@ export function AppPage() {
   const user = useAuthedUser();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const [params, setParams] = useSearchParams();
+
+  // ECPay returns here via the /ecpay-result redirect. The row is activated server-side by the
+  // ReturnURL callback, so this is only a message + a refetch, never an activation.
+  useEffect(() => {
+    const purchase = params.get("purchase");
+    if (!purchase) return;
+    if (purchase === "success") {
+      toast.success("付款完成！", { description: "訂閱啟用中，幾秒後卡片會顯示「已訂閱」。" });
+      const t = setTimeout(() => queryClient.invalidateQueries({ queryKey: ["subscriptions"] }), 3000);
+      queryClient.invalidateQueries({ queryKey: ["subscriptions"] });
+      setParams({}, { replace: true });
+      return () => clearTimeout(t);
+    }
+    toast.error("付款未完成", { description: "可以在卡片上按「完成付款」再試一次。" });
+    setParams({}, { replace: true });
+  }, [params, setParams, queryClient]);
 
   async function signOut() {
     await queryClient.cancelQueries();
